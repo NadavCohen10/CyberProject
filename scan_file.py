@@ -1,3 +1,6 @@
+# usage exmaple : python3 scan_file.py dataset/benign/ls
+# usage example : python3 scan_file.py "dataset/malware/Mughthesec/Installer.app/Contents/MacOS/mac"
+
 import os
 import lief
 import joblib
