@@ -1,3 +1,6 @@
+# extract freatures from Mach-O files in malware and benign datasets
+
+
 import os
 import lief
 import numpy as np

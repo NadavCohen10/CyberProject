@@ -1,3 +1,6 @@
+# extract all compressed files in a directory recursively using 7zip ( p7zip-full must be installed )
+# for the malware dataset that comprises .dmg, .pkg, .zip, .tar.gz, .xip files
+
 import os
 import subprocess
 
