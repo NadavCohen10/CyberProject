@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="381" id="KGk-i7-Jjw" customClass="UserDetailCell" customModule="TwitterTask" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="408" height="381"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="408" height="381"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="lTc-AY-59O">
+                        <rect key="frame" x="0.0" y="0.0" width="408" height="163"/>
+                        <accessibility key="accessibilityConfiguration" identifier="User Banner Image" label="User Banner Image">
+                            <bool key="isElement" value="YES"/>
+                        </accessibility>
+                    </imageView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="1xj-qL-zu2">
+                        <rect key="frame" x="15" y="130.5" width="65.5" height="65.5"/>
+                        <accessibility key="accessibilityConfiguration" identifier="User Profile Image" label="User Profile Image">
+                            <bool key="isElement" value="YES"/>
+                        </accessibility>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="1xj-qL-zu2" secondAttribute="height" multiplier="1:1" id="sNV-f1-yiW"/>
+                        </constraints>
+                    </imageView>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="99w-TI-jCe">
+                        <rect key="frame" x="15" y="208" width="378" height="158"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfn-3E-c0M">
+                                <rect key="frame" x="0.0" y="0.0" width="378" height="30"/>
+                                <accessibility key="accessibilityConfiguration" identifier="User name" label="User name"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Bxi-Aa-TCs"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zRW-nl-zaY">
+                                <rect key="frame" x="0.0" y="34" width="378" height="30"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Screen name" label="Screen name"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="gLP-Pd-pDz"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MpU-dO-fWk">
+                                <rect key="frame" x="0.0" y="68" width="378" height="22"/>
+                                <accessibility key="accessibilityConfiguration" identifier="User Description" label="User Description"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U1I-gF-Xwv">
+                                <rect key="frame" x="0.0" y="94" width="378" height="30"/>
+                                <accessibility key="accessibilityConfiguration" identifier="User location" label="User location"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="6z5-t7-aSY"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="870-cG-I0n">
+                                <rect key="frame" x="0.0" y="128" width="378" height="30"/>
+                                <accessibility key="accessibilityConfiguration" identifier="User followers" label="User followers"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="NBx-ak-tUO"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="lTc-AY-59O" firstAttribute="height" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="0.4" id="18L-6y-eV3"/>
+                    <constraint firstAttribute="trailing" secondItem="lTc-AY-59O" secondAttribute="trailing" id="8Ac-ru-Ubz"/>
+                    <constraint firstAttribute="bottom" secondItem="99w-TI-jCe" secondAttribute="bottom" constant="15" id="D4C-dW-eep"/>
+                    <constraint firstItem="99w-TI-jCe" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="DBL-pB-JHn"/>
+                    <constraint firstAttribute="trailing" secondItem="99w-TI-jCe" secondAttribute="trailing" constant="15" id="Emj-Ia-wxJ"/>
+                    <constraint firstItem="99w-TI-jCe" firstAttribute="top" secondItem="1xj-qL-zu2" secondAttribute="bottom" constant="12" id="H4j-hA-v7P"/>
+                    <constraint firstItem="lTc-AY-59O" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Usm-kt-aeM"/>
+                    <constraint firstItem="1xj-qL-zu2" firstAttribute="height" secondItem="lTc-AY-59O" secondAttribute="height" multiplier="0.4" id="Wbh-q2-CUW"/>
+                    <constraint firstItem="lTc-AY-59O" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="eXJ-0F-CPo"/>
+                    <constraint firstItem="1xj-qL-zu2" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="m9u-Yy-ApO"/>
+                    <constraint firstItem="1xj-qL-zu2" firstAttribute="centerY" secondItem="lTc-AY-59O" secondAttribute="bottom" id="x8Z-tQ-3aa"/>
+                </constraints>
+            </tableViewCellContentView>
+            <accessibility key="accessibilityConfiguration" identifier="User Details cell" label="User Details cell">
+                <bool key="isElement" value="YES"/>
+            </accessibility>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="bannerImage" destination="lTc-AY-59O" id="inP-Zi-eXL"/>
+                <outlet property="labelDesription" destination="MpU-dO-fWk" id="0GC-ub-w2C"/>
+                <outlet property="labelFollowers" destination="870-cG-I0n" id="b9Y-4B-2rN"/>
+                <outlet property="labelLocation" destination="U1I-gF-Xwv" id="D2x-Bt-lJR"/>
+                <outlet property="labelScreenName" destination="zRW-nl-zaY" id="FgN-jv-NVB"/>
+                <outlet property="labelUserName" destination="dfn-3E-c0M" id="3o7-fr-Bx2"/>
+                <outlet property="userImage" destination="1xj-qL-zu2" id="fIQ-MG-BvV"/>
+            </connections>
+            <point key="canvasLocation" x="201.44927536231884" y="173.77232142857142"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="ic_placeholder" width="800" height="600"/>
+    </resources>
+</document>

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Class-Path: .
+Main-Class: Main
+
+Name: org/jnativehook
+Implementation-Vendor: Alexander Barker
+Implementation-Title: JNativeHook Library
+Implementation-Version: 1.1.0
+
