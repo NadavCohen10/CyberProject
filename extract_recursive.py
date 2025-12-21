@@ -4,8 +4,11 @@
 import os
 import subprocess
 
-# הגדרת נתיב לתיקיית הנוזקות
-MALWARE_DIR = os.path.expanduser("~/Desktop/CyberProject/dataset/malware")
+# Get the directory where this script is located
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Assumes the folder structure: CyberProject/dataset/malware
+MALWARE_DIR = os.path.join(SCRIPT_DIR, "dataset", "malware")
 
 def extract_archives(root_folder):
     print(f"--- Starting recursive extraction in: {root_folder} ---")
@@ -15,18 +18,16 @@ def extract_archives(root_folder):
         for file in files:
             file_path = os.path.join(root, file)
             
-            # בדיקה אם זה קובץ מכווץ
+            # Check if the file is a compressed archive
             if file.endswith(('.dmg', '.pkg', '.zip', '.tar.gz', '.xip')):
                 print(f"Extracting: {file}...")
                 
                 try:
-                    # שימוש ב-7zip לחילוץ (מניח ש-p7zip-full מותקן)
-                    # ה-flag -o מגדיר לחלץ לאותה תיקייה שבה הקובץ נמצא
-                    # ה-flag -y מאשר דריסת קבצים אוטומטית אם צריך
+                    # Use 7zip for extraction (assumes p7zip-full is installed)
                     subprocess.run(
                         ["7z", "x", file_path, f"-o{root}", "-y"], 
-                        stdout=subprocess.DEVNULL, # הסתרת פלט רגיל
-                        stderr=subprocess.PIPE     # תפיסת שגיאות
+                        stdout=subprocess.DEVNULL, # Hide standard output
+                        stderr=subprocess.PIPE     # Capture errors
                     )
                     count += 1
                 except Exception as e:
