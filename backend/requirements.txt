@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+rq
+redis
+joblib
+lief
+numpy
+scikit-learn

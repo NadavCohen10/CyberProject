@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # 1. The Redis Queue (The Message Broker)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  # 2. The Backend API (FastAPI)
+  web:
+    build: ./backend
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./temp_uploads:/app/temp_uploads
+    depends_on:
+      - redis
+
+  # 3. The Worker (The one that scans)
+  worker:
+    build: ./backend
+    # This command starts the RQ worker and points it to the redis container
+    command: rq worker --url redis://redis:6379
+    volumes:
+      - ./temp_uploads:/app/temp_uploads
+    depends_on:
+      - redis
+      - web
