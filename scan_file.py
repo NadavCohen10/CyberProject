@@ -6,13 +6,21 @@ import lief
 import joblib
 import numpy as np
 import sys
+import warnings
+
+warnings.filterwarnings("ignore")
 
 # --- Dynamic Path Configuration ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "backend", "malware_model.pkl")
 
+# --- Suspicious Functions List ---
+SUSPICIOUS_IMPORTS = [
+    'ptrace', 'openssl', 'socket', 'connect', 'bind', 'listen', 
+    'system', 'execve', 'chmod', 'wget', 'curl', 'kill', 'keylogger'
+]
+
 def extract_features_for_prediction(filepath):
-    """Matches the exact feature extraction used during training"""
     try:
         binary = lief.parse(filepath)
         if binary is None: return None
@@ -25,26 +33,38 @@ def extract_features_for_prediction(filepath):
         # 2. Number of Sections
         n_sections = len(binary.sections)
         
-        # 3. Imported Functions Count
+        # 3 + 4. Imported Functions & Suspicious Count
         n_imports = 0
+        suspicious_count = 0
+
         if hasattr(binary, 'imported_functions'):
              n_imports = len(binary.imported_functions)
+             for func in binary.imported_functions:
+                 if any(s in func.name.lower() for s in SUSPICIOUS_IMPORTS):
+                     suspicious_count += 1
         elif hasattr(binary, 'libraries'):
              n_imports = len(binary.libraries)
         
-        # 4. Exported Functions Count
+        # 5. Exported Functions Count
         n_exports = len(binary.exported_functions) if hasattr(binary, 'exported_functions') else 0
             
-        # 5. Signature Presence (1 if signed, 0 if not)
-        has_sig = 1 if getattr(binary, 'has_signature', False) else 0
+        # 6. Signature Presence (THE FIX)
+        has_sig = 0
+        try:
+            if binary.has_code_signature:
+                has_sig = 1
+            elif binary.code_signature_dir:
+                has_sig = 1
+        except:
+            has_sig = 0
         
-        # 6. Average Entropy
+        # 7. Average Entropy
         entropy = 0
         if binary.sections:
             entropy = np.mean([s.entropy for s in binary.sections])
 
-        # Return data in the exact order the model expects
-        return [size, n_sections, n_imports, n_exports, has_sig, entropy]
+        # Return data [size, sections, imports, suspicious, exports, signature, entropy]
+        return [size, n_sections, n_imports, suspicious_count, n_exports, has_sig, entropy]
 
     except Exception as e:
         print(f"Error extraction: {e}")
@@ -57,36 +77,35 @@ def scan(filepath):
         print("❌ Error: File not found.")
         return
 
-    # 1. Load the trained model
     try:
         model = joblib.load(MODEL_PATH)
     except:
-        print(f"❌ Error: Model file not found at {MODEL_PATH}. Run train_model.py first.")
+        print(f"❌ Error: Model file not found at {MODEL_PATH}.")
         return
 
-    # 2. Extract Features
     features = extract_features_for_prediction(filepath)
     
     if features is None:
         print("⚠️  Skipped: Not a valid Mach-O binary.")
         return
 
-    # 3. Convert to 2D array for the model
     features_array = np.array(features).reshape(1, -1)
-
-    # 4. Perform Prediction
     prediction = model.predict(features_array)[0]
-    # Get the probability of being malware
     probability = model.predict_proba(features_array)[0][1] * 100 
 
-    # 5. Output Results
     print("-" * 30)
     if prediction == 1:
         print(f"🚨 RESULT: MALWARE DETECTED! ({probability:.2f}% confidence)")
     else:
         print(f"✅ RESULT: File is Safe. ({100-probability:.2f}% confidence)")
     print("-" * 30)
-    print(f"Stats: Size={features[0]}, Sections={features[1]}, Imports={features[2]}, Entropy={features[5]:.2f}")
+    
+    print(f"Stats:")
+    print(f" - Size: {features[0]}")
+    print(f" - Sections: {features[1]}")
+    print(f" - Imports: {features[2]} (Suspicious: {features[3]})")
+    print(f" - Signed: {'Yes' if features[5]==1 else 'No'}")
+    print(f" - Entropy: {features[6]:.2f}")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

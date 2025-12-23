@@ -6,14 +6,14 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 import os
 
 # --- Path Configuration ---
-# Use dynamic path detection instead of hardcoded Desktop path
+# Use a dynamic path to avoid path/location errors
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.join(BASE_DIR, "dataset.csv")
 MODEL_DIR = os.path.join(BASE_DIR, "backend") 
-MODEL_PATH = os.path.join(MODEL_DIR, "malware_model.pkl")
+MODEL_PATH = os.path.join(MODEL_DIR, "malware_model1.pkl")
 
 def train():
-    print("--- Starting Model Training ---")
+    print("--- Starting Model Training (Optimized) ---")
     
     # 1. Load the Data
     if not os.path.exists(CSV_PATH):
@@ -38,9 +38,16 @@ def train():
     # Split: 80% for training, 20% for testing
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # 3. Training
-    print("Training Random Forest Classifier...")
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    # 3. Training with OPTIMIZED Parameters
+    print("Training Random Forest Classifier with optimized parameters...")
+    model = RandomForestClassifier(
+        n_estimators=100,       # more trees = higher accuracy
+        bootstrap=True,        # use bootstrap sampling
+        min_samples_split=2,
+        max_depth=None,
+        random_state=42
+    )
+    
     model.fit(X_train, y_train)
 
     # 4. Results Evaluation
@@ -53,6 +60,17 @@ def train():
     
     print("\nDetailed Report:")
     print(classification_report(y_test, y_pred))
+
+    # --- New Feature: Error Analysis ---
+    # Print the specific files the model misclassified
+    print("\n🔍 Error Analysis: Which files confused the model?")
+    test_indices = X_test.index
+    errors = df.loc[test_indices][y_test != y_pred]
+    
+    if not errors.empty:
+        print(errors[['filename', 'label', 'file_size', 'num_imported_functions']])
+    else:
+        print("🎉 Amazing! No errors found in the test set.")
 
     # 5. Save the Model for Server Usage
     if not os.path.exists(MODEL_DIR):
