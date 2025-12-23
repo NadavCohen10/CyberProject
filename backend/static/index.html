@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberScan AI Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen flex flex-col items-center justify-center p-6">
+    <div class="max-w-2xl w-full bg-slate-800 rounded-xl shadow-2xl p-8 border border-slate-700">
+        <div class="flex justify-end mb-4">
+            <a href="/stats" class="text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1">
+                <span class="text-lg">📊</span> View System Usage Stats
+            </a>
+        </div>
+        <h1 class="text-3xl font-bold mb-2 text-blue-400">CyberScan AI</h1>
+        <p class="text-slate-400 mb-8">Advanced Malware Analysis System (Distributed Edition)</p>
+
+        <div class="space-y-6">
+            <div id="dropZone" class="border-2 border-dashed border-slate-600 rounded-lg p-10 text-center hover:border-blue-500 transition-colors">
+                <input type="file" id="fileInput" class="hidden">
+                <label for="fileInput" class="cursor-pointer block">
+                    <span class="text-lg block" id="instructionText">Click to select a binary file for analysis</span>
+                    <span id="fileNameDisplay" class="text-blue-400 font-bold mt-2 block hidden"></span>
+                    <p class="text-sm text-slate-500 mt-2">ELF, PE, or Mach-O formats supported</p>
+                </label>
+            </div>
+            
+            <button onclick="uploadFile()" id="scanBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition-all shadow-lg">
+                START SCAN
+            </button>
+        </div>
+
+        <div id="resultArea" class="mt-10 hidden p-6 rounded-lg border-2">
+            <h2 id="resultStatus" class="text-2xl font-black uppercase tracking-widest"></h2>
+            <div id="resultDetails" class="mt-4 text-slate-300 grid grid-cols-2 gap-4 text-sm"></div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const instructionText = document.getElementById('instructionText');
+
+        // Change 1: Update the file name display as soon as a file is picked
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.innerText = "Selected: " + fileInput.files[0].name;
+                fileNameDisplay.classList.remove('hidden');
+                instructionText.innerText = "Change file:"; 
+            }
+        });
+
+        async function uploadFile() {
+            const scanBtn = document.getElementById('scanBtn');
+            const resultArea = document.getElementById('resultArea');
+            if (!fileInput.files[0]) return alert("Please select a file first");
+
+            // Reset UI state
+            resultArea.classList.add('hidden');
+            scanBtn.disabled = true;
+            scanBtn.innerText = "UPLOADING & ANALYZING...";
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const uploadRes = await fetch('/upload', { method: 'POST', body: formData });
+                const { task_id } = await uploadRes.json();
+
+                // Change 2: Stop polling if the status is anything other than "Processing"
+                const poll = setInterval(async () => {
+                    const res = await fetch(`/results/${task_id}`);
+                    const data = await res.json();
+                    
+                    // If status is not "Processing", we have a final answer (Success or Failure)
+                    if (data.status !== "Processing") {
+                        clearInterval(poll);
+                        displayResult(data);
+                    }
+                }, 2000);
+            } catch (err) {
+                alert("Upload failed. Make sure the server is running.");
+                resetButton();
+            }
+        }
+
+        function resetButton() {
+            const scanBtn = document.getElementById('scanBtn');
+            scanBtn.disabled = false;
+            scanBtn.innerText = "START SCAN";
+        }
+
+        function displayResult(data) {
+            const area = document.getElementById('resultArea');
+            const status = document.getElementById('resultStatus');
+            const details = document.getElementById('resultDetails');
+            
+            area.classList.remove('hidden');
+            resetButton();
+
+            // Handle Failures (Invalid file types, etc.)
+            if (data.status === "Failed" || data.status === "Error") {
+                area.className = "mt-10 p-6 rounded-lg border-2 border-orange-500 bg-orange-900/20";
+                status.innerText = "❌ ANALYSIS FAILED";
+                status.className = "text-2xl font-black text-orange-500";
+                details.innerHTML = `<div class="col-span-2 text-center text-lg">${data.error || "Unknown Error"}</div>`;
+                return;
+            }
+
+            // Display Valid Scan Result
+            if (data.prediction === "MALWARE") {
+                area.className = "mt-10 p-6 rounded-lg border-2 border-red-500 bg-red-900/20";
+                status.innerText = "⚠️ MALWARE DETECTED";
+                status.className = "text-2xl font-black text-red-500";
+            } else {
+                area.className = "mt-10 p-6 rounded-lg border-2 border-green-500 bg-green-900/20";
+                status.innerText = "✅ FILE IS SAFE";
+                status.className = "text-2xl font-black text-green-500";
+            }
+
+            details.innerHTML = `
+                <div><strong>Confidence:</strong> ${data.confidence}</div>
+                <div><strong>Time:</strong> ${data.processing_time_sec}s</div>
+                <div><strong>Sections:</strong> ${data.details.sections}</div>
+                <div><strong>Size:</strong> ${(data.details.size_bytes / 1024).toFixed(2)} KB</div>
+            `;
+        }
+    </script>
+</body>
+</html>

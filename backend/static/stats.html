@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><title>CyberScan Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-900 text-white p-10">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-10">
+            <h1 class="text-4xl font-bold text-blue-400">System Analytics</h1>
+            <a href="/" class="bg-slate-700 hover:bg-slate-600 px-6 py-2 rounded-lg transition">Back to Scanner</a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-center">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <p class="text-slate-400 text-sm">Total Files Scanned</p>
+                <h2 id="totalScans" class="text-4xl font-bold">0</h2>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <p class="text-slate-400 text-sm">Malware Detected</p>
+                <h2 id="totalMalware" class="text-4xl font-bold text-red-500">0</h2>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <p class="text-slate-400 text-sm">Avg. Processing Time</p>
+                <h2 id="avgTime" class="text-4xl font-bold text-green-400">0s</h2>
+            </div>
+        </div>
+
+        <div class="bg-slate-800 p-8 rounded-xl border border-slate-700">
+            <h3 class="text-xl font-bold mb-6">Processing Time vs. File Size</h3>
+            <div class="h-96">
+                <canvas id="scatterChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadStats() {
+            const res = await fetch('/api/all-stats');
+            const data = await res.json();
+            const completed = data.filter(d => d.status === "Completed");
+
+            // Update Cards
+            document.getElementById('totalScans').innerText = completed.length;
+            document.getElementById('totalMalware').innerText = completed.filter(d => d.prediction === "MALWARE").length;
+            const avg = completed.reduce((acc, curr) => acc + curr.processing_time_sec, 0) / completed.length;
+            document.getElementById('avgTime').innerText = avg.toFixed(3) + "s";
+
+            // Prepare Scatter Data (X: Size in KB, Y: Time in Sec)
+            const scatterData = completed.map(d => ({
+                x: (d.details.size_bytes / 1024).toFixed(2),
+                y: d.processing_time_sec
+            }));
+
+            new Chart(document.getElementById('scatterChart'), {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Files Analyzed',
+                        data: scatterData,
+                        backgroundColor: '#60a5fa'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { title: { display: true, text: 'File Size (KB)', color: '#94a3b8' } },
+                        y: { title: { display: true, text: 'Time (Seconds)', color: '#94a3b8' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        loadStats();
+    </script>
+</body>
+</html>
