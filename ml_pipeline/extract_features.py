@@ -7,9 +7,9 @@ import csv
 import gc
 
 # --- Settings ---
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir))
 MALWARE_DIR = os.path.join(BASE_DIR, "data/samples/malware")
-BENIGN_DIR = os.path.join(BASE_DIR, "data/samples//benign")
+BENIGN_DIR = os.path.join(BASE_DIR, "data/samples/benign")
 OUTPUT_CSV = os.path.join(BASE_DIR, "data/dataset.csv")
 
 # Valid magic bytes

@@ -5,7 +5,8 @@ import os
 import subprocess
 
 # Get the directory where this script is located
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir))
+
 
 # Assumes the folder structure: CyberProject/data/samples/malware
 MALWARE_DIR = os.path.join(SCRIPT_DIR, "data", "smapes", "malware")

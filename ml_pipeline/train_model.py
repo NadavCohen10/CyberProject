@@ -7,7 +7,7 @@ import os
 
 # --- Path Configuration ---
 # Use a dynamic path to avoid path/location errors
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir))
 CSV_PATH = os.path.join(BASE_DIR, "data", "dataset.csv")
 MODEL_DIR = os.path.join(BASE_DIR, "app", "models") 
 MODEL_PATH = os.path.join(MODEL_DIR, "malware_model.pkl")
