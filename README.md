@@ -77,6 +77,6 @@ This is designed so you can quickly sort, triage, or annotate results in your ow
 
 ## Safety & Legal Disclaimer
 
-This code is provided for **research and educational use only**. Do **not** analyze unknown samples on production machines — use VMs, containers, or isolated lab systems. Do not use this project to attack or analyze systems you do not own or have permission to test.
+This code is provided for **research and educational use only**. Do **not** analyze unknown samples on production machines, use VMs, containers, or isolated lab systems. Do not use this project to attack or analyze systems you do not own or have permission to test.
 
 
