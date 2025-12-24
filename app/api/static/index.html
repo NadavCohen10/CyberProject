@@ -14,6 +14,7 @@
                 <span>View System Usage Stats</span>
             </a>
         </div>
+
         <h1 class="text-3xl font-bold mb-2 text-blue-400">CyberScan AI</h1>
         <p class="text-slate-400 mb-8">Advanced Malware Analysis System (Distributed Edition)</p>
 
@@ -43,7 +44,7 @@
         const fileNameDisplay = document.getElementById('fileNameDisplay');
         const instructionText = document.getElementById('instructionText');
 
-        // Change 1: Update the file name display as soon as a file is picked
+        // Update file name display when picked
         fileInput.addEventListener('change', () => {
             if (fileInput.files.length > 0) {
                 fileNameDisplay.innerText = "Selected: " + fileInput.files[0].name;
@@ -57,7 +58,6 @@
             const resultArea = document.getElementById('resultArea');
             if (!fileInput.files[0]) return alert("Please select a file first");
 
-            // Reset UI state
             resultArea.classList.add('hidden');
             scanBtn.disabled = true;
             scanBtn.innerText = "UPLOADING & ANALYZING...";
@@ -66,15 +66,15 @@
             formData.append('file', fileInput.files[0]);
 
             try {
+                // Calls the absolute route defined in main.py
                 const uploadRes = await fetch('/upload', { method: 'POST', body: formData });
                 const { task_id } = await uploadRes.json();
 
-                // Change 2: Stop polling if the status is anything other than "Processing"
+                // Poll /results until status is no longer "Processing"
                 const poll = setInterval(async () => {
                     const res = await fetch(`/results/${task_id}`);
                     const data = await res.json();
                     
-                    // If status is not "Processing", we have a final answer (Success or Failure)
                     if (data.status !== "Processing") {
                         clearInterval(poll);
                         displayResult(data);
@@ -100,7 +100,7 @@
             area.classList.remove('hidden');
             resetButton();
 
-            // Handle Failures (Invalid file types, etc.)
+            // Handles worker failure or invalid binary parsing
             if (data.status === "Failed" || data.status === "Error") {
                 area.className = "mt-10 p-6 rounded-lg border-2 border-orange-500 bg-orange-900/20";
                 status.innerText = "❌ ANALYSIS FAILED";
@@ -109,7 +109,7 @@
                 return;
             }
 
-            // Display Valid Scan Result
+            // Updates UI based on ML model prediction
             if (data.prediction === "MALWARE") {
                 area.className = "mt-10 p-6 rounded-lg border-2 border-red-500 bg-red-900/20";
                 status.innerText = "⚠️ MALWARE DETECTED";

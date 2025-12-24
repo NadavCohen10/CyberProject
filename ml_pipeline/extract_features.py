@@ -8,9 +8,9 @@ import gc
 
 # --- Settings ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MALWARE_DIR = os.path.join(BASE_DIR, "dataset/malware")
-BENIGN_DIR = os.path.join(BASE_DIR, "dataset/benign")
-OUTPUT_CSV = os.path.join(BASE_DIR, "dataset.csv")
+MALWARE_DIR = os.path.join(BASE_DIR, "data/samples/malware")
+BENIGN_DIR = os.path.join(BASE_DIR, "data/samples//benign")
+OUTPUT_CSV = os.path.join(BASE_DIR, "data/dataset.csv")
 
 # Valid magic bytes
 VALID_MAGICS = [

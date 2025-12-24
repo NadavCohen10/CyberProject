@@ -7,8 +7,8 @@ import subprocess
 # Get the directory where this script is located
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Assumes the folder structure: CyberProject/dataset/malware
-MALWARE_DIR = os.path.join(SCRIPT_DIR, "dataset", "malware")
+# Assumes the folder structure: CyberProject/data/samples/malware
+MALWARE_DIR = os.path.join(SCRIPT_DIR, "data", "smapes", "malware")
 
 def extract_archives(root_folder):
     print(f"--- Starting recursive extraction in: {root_folder} ---")

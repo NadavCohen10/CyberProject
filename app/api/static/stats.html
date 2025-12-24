@@ -44,14 +44,18 @@
             // Update Cards
             document.getElementById('totalScans').innerText = completed.length;
             document.getElementById('totalMalware').innerText = completed.filter(d => d.prediction === "MALWARE").length;
-            const avg = completed.reduce((acc, curr) => acc + curr.processing_time_sec, 0) / completed.length;
+            // Compute average robustly (ignore missing or invalid times)
+            const times = completed.map(d => Number(d.processing_time_sec)).filter(n => !isNaN(n));
+            const avg = times.length ? times.reduce((acc, curr) => acc + curr, 0) / times.length : 0;
             document.getElementById('avgTime').innerText = avg.toFixed(3) + "s";
 
             // Prepare Scatter Data (X: Size in KB, Y: Time in Sec)
-            const scatterData = completed.map(d => ({
-                x: (d.details.size_bytes / 1024).toFixed(2),
-                y: d.processing_time_sec
-            }));
+            const scatterData = completed.map(d => {
+                const sizeBytes = d.details && !isNaN(Number(d.details.size_bytes)) ? Number(d.details.size_bytes) : 0;
+                const sizeKB = sizeBytes / 1024;
+                const time = Number(d.processing_time_sec);
+                return { x: Number(sizeKB.toFixed(2)), y: isNaN(time) ? 0 : time };
+            });
 
             new Chart(document.getElementById('scatterChart'), {
                 type: 'scatter',

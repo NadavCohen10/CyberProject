@@ -8,9 +8,9 @@ import os
 # --- Path Configuration ---
 # Use a dynamic path to avoid path/location errors
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CSV_PATH = os.path.join(BASE_DIR, "dataset.csv")
-MODEL_DIR = os.path.join(BASE_DIR, "backend") 
-MODEL_PATH = os.path.join(MODEL_DIR, "malware_model1.pkl")
+CSV_PATH = os.path.join(BASE_DIR, "data", "dataset.csv")
+MODEL_DIR = os.path.join(BASE_DIR, "app", "models") 
+MODEL_PATH = os.path.join(MODEL_DIR, "malware_model.pkl")
 
 def train():
     print("--- Starting Model Training (Optimized) ---")

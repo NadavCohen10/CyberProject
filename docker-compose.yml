@@ -1,30 +1,38 @@
-version: '3.8'
-
 services:
-  # 1. The Redis Queue (The Message Broker)
+  # 1. Redis: No changes needed here
   redis:
     image: redis:7-alpine
+    container_name: cyber-redis
     ports:
       - "6379:6379"
+    restart: always
 
-  # 2. The Backend API (FastAPI)
+  # 2. Web API (FastAPI)
   web:
-    build: ./backend
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    # CHANGE 1: Build context must point to the 'app' folder where Dockerfile is
+    build: ./app 
+    container_name: cyber-web
+    # CHANGE 2: Updated path to find main.py inside the 'api' subfolder
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
     volumes:
       - ./temp_uploads:/app/temp_uploads
     depends_on:
       - redis
+    restart: on-failure
 
-  # 3. The Worker (The one that scans)
+  # 3. Worker Service
   worker:
-    build: ./backend
-    # This command starts the RQ worker and points it to the redis container
-    command: rq worker --url redis://redis:6379
+    # CHANGE 1: Build context must point to the 'app' folder
+    build: ./app
+    container_name: cyber-worker
+    # CHANGE 3: Path updated to find worker.py inside the 'worker' subfolder
+    command: rq worker --url redis://redis:6379 default
+    working_dir: /app
     volumes:
       - ./temp_uploads:/app/temp_uploads
     depends_on:
       - redis
       - web
+    restart: on-failure

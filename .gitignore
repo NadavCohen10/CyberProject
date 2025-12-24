@@ -11,7 +11,7 @@ __pycache__/
 *.tar.gz
 *.journal
 *.journal*
-dataset/
+data/samples/
 
 # Project temporary files
 temp_uploads/

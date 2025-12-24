@@ -14,15 +14,17 @@ app = FastAPI(title="Malware Detection API", version="1.0")
 redis_conn = Redis(host='redis', port=6379)
 q = Queue(connection=redis_conn)
 
-# 2. Unified path matching the Docker Volume
+# 2. Paths updated to match internal Docker structure
 UPLOAD_DIR = "/app/temp_uploads"
+STATIC_DIR = "/app/api/static"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-app.mount("/static", StaticFiles(directory="/app/static"), name="static")
+# Mount static files from the /app/static directory
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/")
 def read_root():
-    return FileResponse("/app/static/index.html")
+    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
 @app.post("/upload", tags=["Scanning"])
 async def upload_file(file: UploadFile = File(...)):
@@ -33,7 +35,7 @@ async def upload_file(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
     
     # Send task to the Worker
-    q.enqueue("worker.process_file", file_path, job_id=task_id)
+    q.enqueue("worker.worker.process_file", file_path, job_id=task_id)
     
     return {
         "task_id": task_id,
@@ -43,10 +45,6 @@ async def upload_file(file: UploadFile = File(...)):
 
 @app.get("/results/{task_id}", tags=["Scanning"])
 async def get_results(task_id: str):
-    """
-    Checks if a result JSON file exists for the given task_id.
-    """
-    # Look for any .json file starting with the task_id
     for filename in os.listdir(UPLOAD_DIR):
         if filename.startswith(task_id) and filename.endswith(".json"):
             json_path = os.path.join(UPLOAD_DIR, filename)
@@ -61,11 +59,10 @@ async def get_results(task_id: str):
 
 @app.get("/stats")
 async def serve_stats_ui():
-    return FileResponse("/app/static/stats.html")
+    return FileResponse(os.path.join(STATIC_DIR, "stats.html"))
 
 @app.get("/api/all-stats")
 async def get_all_stats():
-    """Aggregates all results from the shared folder for the stats dashboard."""
     all_data = []
     for filename in os.listdir(UPLOAD_DIR):
         if filename.endswith(".json"):
