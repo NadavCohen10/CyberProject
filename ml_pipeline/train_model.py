@@ -17,7 +17,7 @@ def train():
     
     # 1. Load the Data
     if not os.path.exists(CSV_PATH):
-        print(f"❌ Error: {CSV_PATH} not found!")
+        print(f"Error: {CSV_PATH} not found!")
         return
 
     df = pd.read_csv(CSV_PATH)
@@ -54,7 +54,7 @@ def train():
     y_pred = model.predict(X_test)
     acc = accuracy_score(y_test, y_pred)
     
-    print(f"\n✅ Model Accuracy: {acc:.4f} ({acc*100:.2f}%)")
+    print(f"\nModel Accuracy: {acc:.4f} ({acc*100:.2f}%)")
     print("\nConfusion Matrix (shows where the model made errors):")
     print(confusion_matrix(y_test, y_pred))
     
@@ -63,21 +63,21 @@ def train():
 
     # --- New Feature: Error Analysis ---
     # Print the specific files the model misclassified
-    print("\n🔍 Error Analysis: Which files confused the model?")
+    print("\nError Analysis: Which files confused the model?")
     test_indices = X_test.index
     errors = df.loc[test_indices][y_test != y_pred]
     
     if not errors.empty:
         print(errors[['filename', 'label', 'file_size', 'num_imported_functions']])
     else:
-        print("🎉 Amazing! No errors found in the test set.")
+        print("Amazing! No errors found in the test set.")
 
     # 5. Save the Model for Server Usage
     if not os.path.exists(MODEL_DIR):
         os.makedirs(MODEL_DIR)
         
     joblib.dump(model, MODEL_PATH)
-    print(f"\n🚀 Model saved successfully to: {MODEL_PATH}")
+    print(f"\nModel saved successfully to: {MODEL_PATH}")
 
 if __name__ == "__main__":
     train()
