@@ -2,6 +2,11 @@
 __pycache__/
 *.pyc
 
+# Virtual Environment (Added)
+venv/
+ENV/
+env/
+
 # Local environment/Docker
 .env
 .dockerignore
@@ -20,3 +25,4 @@ temp_uploads/
 # IDEs
 .vscode/
 .idea/
+
