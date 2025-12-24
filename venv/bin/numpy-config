@@ -1,4 +1,4 @@
-#!/home/parallels/Desktop/CyberProject/venv/bin/python3
+#!/home/hacker/Downloads/CyberProject/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

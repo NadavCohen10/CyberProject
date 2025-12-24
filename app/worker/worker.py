@@ -22,7 +22,7 @@ except Exception as e:
     print(f"[!] FATAL: Could not load model: {e}")
     model = None 
 
-def process_file(filepath):
+def process_file(filepath: str) -> dict:
     if model is None:
         return {"status": "Error", "error": "Model not loaded"}
 
