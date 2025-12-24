@@ -61,7 +61,7 @@ curl http://localhost:8000/results/<task_id>
 A JSON result contains:
 - `task_id`, `filename`, `status` (Processing/Completed)
 - `prediction`: `MALWARE` or `BENIGN`
-- small set of supporting measurements (imports, entropy, signature flag)
+- small set of supporting measurements
 
 This is designed so you can quickly sort, triage, or annotate results in your own workflows.
 
