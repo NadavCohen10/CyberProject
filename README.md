@@ -1,13 +1,13 @@
-# CyberScan AI — Simple Overview
+# MacBreaker — Simple Overview
 
 **Short description:**
-CyberScan AI helps you quickly identify whether a macOS binary looks malicious. It provides a short, explainable verdict plus a small set of supporting signals so you can triage samples fast.
+MacBreaker helps you quickly identify whether a macOS binary looks malicious. It provides a short, explainable verdict plus a small set of supporting signals so you can triage samples fast.
 
 ---
 
 ## Authors
 
-- Project: CyberScan AI
+- Project: MacBreaker
 - Maintainers / Contributors: Nadav Cohen, Ofek Bar Shalom
 
 ---
